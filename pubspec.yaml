@@ -44,6 +44,7 @@ dependencies:
   path_provider: ^2.1.5
   signalr_netcore: ^1.4.4
   uuid: ^4.5.1
+  audioplayers: ^6.0.0
 
 dev_dependencies:
   flutter_test:
@@ -69,7 +70,7 @@ flutter:
 
   assets:
     - .env
-
+    - assets/audio/beep.mp3
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

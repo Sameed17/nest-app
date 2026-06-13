@@ -1,5 +1,8 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:nest/data/scan/scan_api.dart';
 
 import '../../../configs/app/app_globals.dart';
 import '../../../configs/app/theme/app_colors.dart';
@@ -73,7 +76,35 @@ class ScanResponseView extends StatelessWidget {
           ],
           if (html != null && html!.isNotEmpty) ...<Widget>[
             SizedBox(height: d.hp(0.014)),
+            FutureBuilder<Uint8List>(
+              future: ScanApi.getStudentPhoto(lastCode!),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const CircleAvatar(
+                    radius: 50,
+                    child: CircularProgressIndicator(),
+                  );
+                }
+
+                return SizedBox(
+                  width: d.wp(0.2),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.memory(
+                      snapshot.data!,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                );
+              },
+            ),
+            SizedBox(height: d.hp(0.014)),
             HtmlWidget(html!),
+            SizedBox(height: d.hp(0.02)),
+            FilledButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Close'),
+            ),
           ],
           if ((html == null || html!.isEmpty) &&
               (errorMessage == null || errorMessage!.isEmpty) &&

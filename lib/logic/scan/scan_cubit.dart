@@ -1,15 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 import '../../data/scan/scan_api.dart';
 import 'scan_state.dart';
 
 class ScanCubit extends Cubit<ScanState> {
-  ScanCubit({
-    required ScanApi scanApi,
-  })  : _scanApi = scanApi,
-        super(ScanState.initial);
-
-  final ScanApi _scanApi;
+  ScanCubit() : super(ScanState.initial);
 
   String? processRollNumber(String raw) {
     final cleaned = raw.trim().toUpperCase().replaceAll(RegExp(r'[\s-]'), '');
@@ -34,6 +30,8 @@ class ScanCubit extends Cubit<ScanState> {
     required String contextLabel,
     required String endpoint,
   }) async {
+    final AudioPlayer audioPlayer = AudioPlayer();
+    await audioPlayer.play(AssetSource('audio/beep.mp3'));
     final String? cleaned = processRollNumber(code);
     if (cleaned == null) {
       emit(
@@ -56,7 +54,7 @@ class ScanCubit extends Cubit<ScanState> {
 
     try {
       final String html =
-          await _scanApi.submitCode(
+          await ScanApi.submitCode(
             code: cleaned,
             contextLabel: contextLabel,
             endpoint: endpoint,

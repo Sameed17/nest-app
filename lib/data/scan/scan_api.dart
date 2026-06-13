@@ -1,14 +1,13 @@
+import 'dart:typed_data';
+
 import 'package:dio/dio.dart';
+import 'package:nest/configs/app/app_globals.dart';
 import 'package:nest/configs/app/remote/api/api_endpoints.dart';
 
-class ScanApi {
-  const ScanApi({
-    required Dio dio,
-  }) : _dio = dio;
+abstract class ScanApi {
+  static final Dio _dio = AppGlobals.dio;
 
-  final Dio _dio;
-
-  Future<String> submitCode({
+  static Future<String> submitCode({
     required String code,
     required String contextLabel,
     required String endpoint,
@@ -36,6 +35,18 @@ class ScanApi {
       }
     }
     return data?.toString() ?? '';
+  }
+
+  static Future<Uint8List> getStudentPhoto(String rollNumber) async {
+    final Response<List<int>> response =
+        await _dio.get<List<int>>(
+      '/getfile/student/$rollNumber/image',
+      options: Options(
+        responseType: ResponseType.bytes,
+      ),
+    );
+
+    return Uint8List.fromList(response.data!);
   }
 }
 
