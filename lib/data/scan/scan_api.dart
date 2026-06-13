@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:nest/configs/app/app_globals.dart';
-import 'package:nest/configs/app/remote/api/api_endpoints.dart';
 
 abstract class ScanApi {
   static final Dio _dio = AppGlobals.dio;
@@ -13,7 +12,7 @@ abstract class ScanApi {
     required String endpoint,
   }) async {
     final Response<dynamic> res = await _dio.post<dynamic>(
-      XEndpoint.scanHostelMessEndpoint,
+      endpoint,
       data: <String, dynamic>{
         'code': code,
         'context': contextLabel,

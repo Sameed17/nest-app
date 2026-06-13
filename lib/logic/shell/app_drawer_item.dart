@@ -12,7 +12,7 @@ enum AppDrawerItem {
   hostelGatepass(
     title: 'Hostel - Gatepass',
     icon: Icons.qr_code_2,
-    endpoint: XEndpoint.scanHostelGatepassEndpoint,
+    endpoint: XEndpoint.scanGatepassEndpoint,
   ),
   hostelResidency(
     title: 'Hostel - Residency',
@@ -32,7 +32,7 @@ enum AppDrawerItem {
   transportGatepass(
     title: 'Transport - Gatepass',
     icon: Icons.local_shipping_outlined,
-    endpoint: XEndpoint.scanTransportGatepassEndpoint,
+    endpoint: XEndpoint.scanGatepassEndpoint,
   );
 
   const AppDrawerItem({
