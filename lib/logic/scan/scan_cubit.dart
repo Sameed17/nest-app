@@ -11,13 +11,31 @@ class ScanCubit extends Cubit<ScanState> {
 
   final ScanApi _scanApi;
 
+  String? processRollNumber(String raw) {
+    final cleaned = raw.trim().toUpperCase().replaceAll(RegExp(r'[\s-]'), '');
+
+    final match =
+        RegExp(r'([A-Z]?)(\d{2})([A-Z]?)(\d+)').firstMatch(cleaned);
+
+    if (match == null) return null;
+
+    final l1 = match.group(1) ?? '';
+    final batch = match.group(2) ?? '';
+    final l2 = match.group(3) ?? '';
+    final id = match.group(4) ?? '';
+
+    final campus = l1.isNotEmpty ? l1 : l2;
+
+    return campus.isNotEmpty ? '$batch$campus-$id' : null;
+  }
+
   Future<void> submit({
     required String code,
     required String contextLabel,
     required String endpoint,
   }) async {
-    final String cleaned = code.trim();
-    if (cleaned.isEmpty) {
+    final String? cleaned = processRollNumber(code);
+    if (cleaned == null) {
       emit(
         state.copyWith(
           errorMessage: 'Please provide a code',

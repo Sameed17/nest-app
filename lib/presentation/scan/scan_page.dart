@@ -29,43 +29,47 @@ class ScanPage extends StatelessWidget {
       child: BlocProvider<ScanCubit>(
         create: (BuildContext context) =>
             ScanCubit(scanApi: context.read<ScanApi>()),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(
-              horizontal: d.wp(0.04),
-              vertical: d.hp(0.02),
-            ),
-            child: Column(
-              children: <Widget>[
-                ScannerCard(
-                  onCode: (String code) => context.read<ScanCubit>().submit(
-                        code: code,
-                        contextLabel: title,
-                        endpoint: endpoint,
-                      ),
+        child: Builder(
+          builder: (BuildContext context) {
+            return SafeArea(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.symmetric(
+                  horizontal: d.wp(0.04),
+                  vertical: d.hp(0.02),
                 ),
-                SizedBox(height: d.hp(0.02)),
-                ScanInputCard(
-                  onSubmit: (String code) => context.read<ScanCubit>().submit(
-                        code: code,
-                        contextLabel: title,
-                        endpoint: endpoint,
-                      ),
+                child: Column(
+                  children: <Widget>[
+                    ScannerCard(
+                      onCode: (String code) => context.read<ScanCubit>().submit(
+                            code: code,
+                            contextLabel: title,
+                            endpoint: endpoint,
+                          ),
+                    ),
+                    SizedBox(height: d.hp(0.02)),
+                    ScanInputCard(
+                      onSubmit: (String code) => context.read<ScanCubit>().submit(
+                            code: code,
+                            contextLabel: title,
+                            endpoint: endpoint,
+                          ),
+                    ),
+                    SizedBox(height: d.hp(0.02)),
+                    BlocBuilder<ScanCubit, ScanState>(
+                      builder: (BuildContext context, ScanState state) {
+                        return ScanResponseView(
+                          isLoading: state.isSubmitting,
+                          errorMessage: state.errorMessage,
+                          html: state.responseHtml,
+                          lastCode: state.lastCode,
+                        );
+                      },
+                    ),
+                  ],
                 ),
-                SizedBox(height: d.hp(0.02)),
-                BlocBuilder<ScanCubit, ScanState>(
-                  builder: (BuildContext context, ScanState state) {
-                    return ScanResponseView(
-                      isLoading: state.isSubmitting,
-                      errorMessage: state.errorMessage,
-                      html: state.responseHtml,
-                      lastCode: state.lastCode,
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
+              ),
+            );
+          }
         ),
       ),
     );
